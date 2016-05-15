@@ -1,0 +1,20 @@
+#!/usr/bin/env python3
+from lybmods import lybrary, lybpqconn, lybpqsession
+from lybmods.lybformauth import check_auth
+from lybmods import lybcfg
+from cherrypy.process.plugins import Daemonizer, DropPrivileges, PIDFile
+from pwd import getpwnam
+import cherrypy
+cherrypy.log.screen = None
+lybpqconn.create_schema()
+cherrypy.lib.sessions.PgsqlSession = lybpqsession.PgsqlSession
+cherrypy.tools.auth = cherrypy.Tool('before_handler', check_auth)
+cherrypy.config.update({
+    'server.socket_port': lybcfg.webport,
+    'server.socket_host': '0.0.0.0',
+})
+
+DropPrivileges(cherrypy.engine, umask=0o640, uid=getpwnam(lybcfg.user).pw_uid, gid=getpwnam(lybcfg.user).pw_gid).subscribe()
+PIDFile(cherrypy.engine, lybcfg.pid).subscribe()
+Daemonizer(cherrypy.engine).subscribe()
+cherrypy.quickstart(lybrary.Root())
