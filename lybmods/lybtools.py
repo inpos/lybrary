@@ -74,17 +74,13 @@ def ctype(c_t):
 def htfile_tounicode(htfile):
     if type(htfile) is str:
         return htfile
-    html = etree.HTML(htfile)
-    ct = html.xpath('//meta/@http-equiv')
-    
+    ct = etree.HTML(htfile).xpath('//meta/@http-equiv')
     enc = detect(htfile)['encoding']
     if ct != []:
-        meta_elem = ct[0].getparent()
-        c_t = meta_elem.attrib['content']
+        c_t = ct[0].getparent().attrib['content']
         if 'charset' in c_t:
             enc = c_t.split('charset')[1].strip().split('=')[1].strip().split(' ')[0]
-        meta_elem.attrib['content'] = re.sub('charset=[^;" ]+', '', meta_elem.attrib['content'])
-    return str(etree.tounicode(html, method='html', pretty_print = True), enc, 'ignore')
+    return str(htfile, enc, 'ignore')
 
 def getbin(sess, hhash):
     cur = sess.db.cursor()
