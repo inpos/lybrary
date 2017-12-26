@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 pid = '/var/www/vhosts/ukamnya.ru/tmp/lyb2.pid'
 user = 'lyb2'
-dbhost = '91.224.22.151'
+dbhost = 'localhost'
 webport = 80
-dbname = 'inposya5_lyb2'
+dbname = 'lyb2'
 dbuser = 'lyb2'
-dbpass = '1lyb20qwe'
+dbpass = 'xxxxx'
 sess_table_name = 'session'
 sess_data_table_name = 'session_data'
 cat_table_name = 'category'
